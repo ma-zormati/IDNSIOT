@@ -33,7 +33,10 @@ class SimpleTopo(Topo):
                 except ValueError:
                     switches.append(self.addSwitch(i[1]))
                     index = len(switches)-1
-                self.addLink(switches[switches.index(i[0])], switches[index])
+                if 'S' in i[0]:
+                    self.addLink(switches[switches.index(i[0])], switches[index])
+                else:
+                    self.addLink(hosts[hosts.index(i[0])], switches[index])
             else:
                 exit(0)
 
