@@ -18,27 +18,42 @@ class SimpleTopo(Topo):
         Topo.__init__(self)
         switches = []
         hosts = []
+        #Create nodes
         for i in lst:
-            #Create node
-            if 'H' in i[0]:
-                hosts.append(self.addHost(i[0]))
-            elif 'S' in i[0]:
-                switches.append(self.addSwitch(i[0]))
-            else:
-                exit(0)
-            #Create link
-            if 'S' in i[1]:
-                try:
-                    index = switches.index(i[1])
-                except ValueError:
-                    switches.append(self.addSwitch(i[1]))
-                    index = len(switches)-1
+            try:
                 if 'S' in i[0]:
-                    self.addLink(switches[switches.index(i[0])], switches[index])
+                    switches.index(i[0])
+                elif 'H' in i[0]:
+                    hosts.index(i[0])
+            except:
+                if 'S' in i[0]:
+                    switches.append(self.addSwitch(i[0]))
+                elif 'H' in i[0]:
+                    hosts.append(self.addHost(i[0]))
+
+            try:
+                if 'S' in i[1]:
+                    switches.index(i[1])
+                elif 'H' in i[1]:
+                    hosts.index(i[1])
+            except:
+                if 'S' in i[1]:
+                    switches.append(self.addSwitch(i[1]))
+                elif 'H' in i[1]:
+                    hosts.append(self.addHost(i[1]))
+
+        #Create links
+        for i in lst:
+            if 'S' in i[0]:
+                if 'S' in i[1]:
+                    self.addLink(switches[switches.index(i[0])], switches[switches.index(i[1])])
                 else:
-                    self.addLink(hosts[hosts.index(i[0])], switches[index])
-            else:
-                exit(0)
+                    self.addLink(switches[switches.index(i[0])], hosts[hosts.index(i[1])])
+            elif 'H' in i[0]:
+                if 'S' in i[1]:
+                    self.addLink(hosts[hosts.index(i[0])], switches[switches.index(i[1])])
+                else:
+                    self.addLink(hosts[hosts.index(i[0])], hosts[hosts.index(i[1])])
 
 
 topos = {'simpletopo': (lambda: SimpleTopo())}
