@@ -14,6 +14,7 @@ class SimpleTopo(Topo):
 
     def __init__(self, lst):
         # Initialize topology
+        global index
         Topo.__init__(self)
         switches = []
         hosts = []
@@ -27,7 +28,12 @@ class SimpleTopo(Topo):
                 exit(0)
             #Create link
             if 'S' in i[1]:
-                self.addLink(switches[switches.index(i[1])], switches[switches.index(i[0])])
+                try:
+                    index = switches.index(i[1])
+                except ValueError:
+                    switches.append(self.addSwitch(i[1]))
+                    index = len(switches)-1
+                self.addLink(switches[switches.index(i[0])], switches[index])
             else:
                 exit(0)
 
